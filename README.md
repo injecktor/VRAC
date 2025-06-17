@@ -3,10 +3,10 @@ VRAC (Virtual RISC Architecture CPU) is a project that demonstrates how microarc
 
 ## How to use
 
-### Implementation details
+## Implementation details
 
-#### Architecture
+### Architecture
 
-#### Microarchitecture
+### Microarchitecture
 
-#### Vassemble
+### Vassemble
