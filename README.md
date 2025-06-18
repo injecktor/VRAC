@@ -5,7 +5,7 @@ VRAC (Virtual RISC Architecture CPU) is 32 bit RISC architecture with non-fixed 
 
 ## Implementation details
 
-- [Architecture](https://github.com/injecktor/VRAC/doc/architecture)
+- [Architecture](https://github.com/injecktor/VRAC/tree/master/docs/architecture.md)
 
 - [Microarchitecture]()
 
