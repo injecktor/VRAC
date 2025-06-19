@@ -14,20 +14,20 @@ Little endian.
 
 |Instruction|Decode|Instruction type|Opcode|Alucode|Description|
 |:-|:-|:-|:-:|:-:|:-:|
-|j|jump|SR-type|10000||Sets flags *eq* and *le*|
-|j|jump|SL-type|10001||Sets flags *eq* and *le*|
-|je|jump if equal|SR-type|10010||Sets flags *eq* and *le*|
-|je|jump if equal|SL-type|10011||Sets flags *eq* and *le*|
-|jne|jump if not equal|SR-type|10100||Sets flags *eq* and *le*|
-|jne|jump if not equal|SL-type|10101||Sets flags *eq* and *le*|
-|jg|jump if greater|SR-type|10110||Sets flags *eq* and *le*|
-|jg|jump if greater|SL-type|10111||Sets flags *eq* and *le*|
-|jge|jump if greater or equal|SR-type|11000||Sets flags *eq* and *le*|
-|jge|jump if greater or equal|SL-type|11001||Sets flags *eq* and *le*|
-|jl|jump if less|SR-type|11010||Sets flags *eq* and *le*|
-|jl|jump if less|SL-type|11011||Sets flags *eq* and *le*|
-|jle|jump if less or equal|SR-type|11100||Sets flags *eq* and *le*|
-|jle|jump if less or equal|SL-type|11101||Sets flags *eq* and *le*|
+|j|jump|SR-type|10000|||
+|j|jump|SL-type|10001|||
+|je|jump if equal|SR-type|10010|||
+|je|jump if equal|SL-type|10011|||
+|jne|jump if not equal|SR-type|10100|||
+|jne|jump if not equal|SL-type|10101|||
+|jg|jump if greater|SR-type|10110|||
+|jg|jump if greater|SL-type|10111|||
+|jge|jump if greater or equal|SR-type|11000|||
+|jge|jump if greater or equal|SL-type|11001|||
+|jl|jump if less|SR-type|11010|||
+|jl|jump if less|SL-type|11011|||
+|jle|jump if less or equal|SR-type|11100|||
+|jle|jump if less or equal|SL-type|11101|||
 |sw|store word|SR-type|00001|||
 |shw|store half word|SR-type|00010|||
 |sb|store byte|SR-type|00011|||
