@@ -104,9 +104,11 @@ Little endian.
 
 Flags serve to contain extra information.
 
-eq (last compare was equal)
-le (last compare was less)
-of (last action had overflow)
+*eq* (last compare was equal)
+
+*le* (last compare was less)
+
+*of* (last action had overflow)
 
 ## Registers
 
