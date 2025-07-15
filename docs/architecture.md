@@ -133,15 +133,15 @@ In VRAC all instructions divided in 7 types ("**/**" defines size in bits):
 
 - SR-type (Simple Register) (2 bytes)
 
-    |opcode/5|register/4|
-    |:-:|:-:|
-    |**xxxxx**|**xxxx**|
+    |opcode/5|register/4|unused/7|
+    |:-:|:-:|:-:|
+    |**xxxxx**|**xxxx**|**xxxxxxx**|
 
 - DR-type (Double Register) (2 bytes)
 
-    |opcode/5|register/4|register/4|
-    |:-:|:-:|:-:|
-    |**xxxxx**|**xxxx**|**xxxx**|
+    |opcode/5|register/4|register/4|unused/3|
+    |:-:|:-:|:-:|:-:|
+    |**xxxxx**|**xxxx**|**xxxx**|**xxx**|
 
 - RL-type (Register Literal) (4 bytes)
 
@@ -151,18 +151,18 @@ In VRAC all instructions divided in 7 types ("**/**" defines size in bits):
 
 - ASR-type (ALU Simple Register) (2 bytes)
 
-    |opcode/5|alucode/6|register/4|
-    |:-:|:-:|:-:|
-    |**xxxxx**|**xxxxx0**|**xxxx**|
-
-- ADR-type (ALU Double Register) (2 bytes)
-
-    |opcode/5|alucode/6|register/4|register/4|
+    |opcode/5|alucode/6|register/4|unused/1|
     |:-:|:-:|:-:|:-:|
-    |**xxxxx**|**xxxxx0**|**xxxx**|**xxxx**|
+    |**00000**|**xxxxx0**|**xxxx**|**x**|
+
+- ADR-type (ALU Double Register) (3 bytes)
+
+    |opcode/5|alucode/6|register/4|register/4|unused/5|
+    |:-:|:-:|:-:|:-:|:-:|
+    |**00000**|**xxxxx0**|**xxxx**|**xxxx**|**xxxxx**|
 
 - ARL-type (ALU Register Literal) (4 bytes)
 
     |opcode/5|alucode/6|register/4|literal/17|
     |:-:|:-:|:-:|:-:|
-    |**xxxxx**|**xxxxx1**|**xxxx**|**xxxxxxxxxxxxxxxxx**|
+    |**00000**|**xxxxx1**|**xxxx**|**xxxxxxxxxxxxxxxxx**|
