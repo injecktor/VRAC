@@ -40,8 +40,6 @@ Little endian.
 |cphw|copy half word|RL-type|01010||Copies 16 LSB|
 |cpb|copy byte|DR-type|01011||Copies 8 LSB|
 |cpb|copy byte|RL-type|01100||Copies 8 LSB|
-|cmp|compare|ADR-type|00000|101100|Sets flags *eq* and *le*|
-|cmp|compare|ARL-type|00000|101101|Sets flags *eq* and *le*|
 |add|add|ADR-type|00000|000000||
 |add|add|ARL-type|00000|000001||
 |min|minus|ADR-type|00000|000110||
@@ -66,6 +64,8 @@ Little endian.
 |shl|shift left|ARL-type|00000|011001||
 |shr|shift right|ADR-type|00000|011010||
 |shr|shift right|ARL-type|00000|011011||
+|cmp|compare|ADR-type|00000|101100|Sets flags *eq* and *le*|
+|cmp|compare|ARL-type|00000|101101|Sets flags *eq* and *le*|
 
 ### Signed specific instructions
 
@@ -83,6 +83,8 @@ Little endian.
 |abs|absolute value|ADR-type|00000|101001|Treats as 32 bit signed value|
 |shrs|shift right as signed|ADR-type|00000|011100||
 |shrs|shift right as signed|ARL-type|00000|011101||
+|cmps|compare as signed|ADR-type|00000|101110|Sets flags *eq* and *le*|
+|cmps|compare as signed|ARL-type|00000|101111|Sets flags *eq* and *le*|
 
 
 ### Float point specific instructions
@@ -99,6 +101,8 @@ Little endian.
 |divf|division as float point|ARL-type|00000|010111|Treats as signed value|
 |absf|absolute value as float point|ASR-type|00000|101010|Treats as 32 bit signed float point|
 |absf|absolute value as float point|ADR-type|00000|101011|Treats as 32 bit signed float point|
+|cmps|compare as float point|ADR-type|00000|110000|Sets flags *eq* and *le*|
+|cmps|compare as float point|ARL-type|00000|110001|Sets flags *eq* and *le*|
 
 ## Flags
 
