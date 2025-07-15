@@ -66,6 +66,8 @@ Little endian.
 |shr|shift right|ARL-type|00000|011011||
 |cmp|compare|ADR-type|00000|101100|Sets flags *eq* and *le*|
 |cmp|compare|ARL-type|00000|101101|Sets flags *eq* and *le*|
+|mod|remain of devision|ADR-type|00000|110010||
+|mod|remain of devision|ARL-type|00000|110011||
 
 ### Signed specific instructions
 
@@ -85,7 +87,8 @@ Little endian.
 |shrs|shift right as signed|ARL-type|00000|011101||
 |cmps|compare as signed|ADR-type|00000|101110|Sets flags *eq* and *le*|
 |cmps|compare as signed|ARL-type|00000|101111|Sets flags *eq* and *le*|
-
+|mods|remain of devision as signed|ADR-type|00000|110100||
+|mods|remain of devision as signed|ARL-type|00000|110111||
 
 ### Float point specific instructions
 
