@@ -101,8 +101,8 @@ Little endian.
 |divf|division as float point|ARL-type|00000|010111|Treats as signed value|
 |absf|absolute value as float point|ASR-type|00000|101010|Treats as 32 bit signed float point|
 |absf|absolute value as float point|ADR-type|00000|101011|Treats as 32 bit signed float point|
-|cmps|compare as float point|ADR-type|00000|110000|Sets flags *eq* and *le*|
-|cmps|compare as float point|ARL-type|00000|110001|Sets flags *eq* and *le*|
+|cmpf|compare as float point|ADR-type|00000|110000|Sets flags *eq* and *le*|
+|cmpf|compare as float point|ARL-type|00000|110001|Sets flags *eq* and *le*|
 
 ## Flags
 
