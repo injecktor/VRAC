@@ -5,6 +5,7 @@ int main(int argc, char *argv[]) {
         parse_args(argc, argv);
     }
     catch (const args_handle_error& error) {
-
+        std::cout << "error" << std::endl;
     }
+    return 0;
 }

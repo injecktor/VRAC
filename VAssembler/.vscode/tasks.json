@@ -1,0 +1,37 @@
+{
+    "tasks": [
+        {
+            "label": "compile",
+            "type": "shell",
+            "command": "cmake --build build",
+            "dependsOn": "generate"
+        },
+        {
+            "label": "generate",
+            "type": "shell",
+            "command": "cmake -B build -G MinGW` Makefiles",
+            "dependsOn": "clear"
+        },
+        {
+            "label": "clear",
+            "dependsOn": [ "del build", "del exe" ]
+        },
+        {
+            "label": "del exe",
+            "type": "shell",
+            "command": "if (Test-Path vasm.exe) { Remove-Item -Path vasm.exe }",
+            "dependsOn": "move"
+        },
+        {
+            "label": "del build",
+            "type": "shell",
+            "command": "if (Test-Path build) { Remove-Item -Path build -Recurse }",
+            "dependsOn": "move"
+        },
+        {
+            "label": "move",
+            "type": "shell",
+            "command": "cd C:/code/VRAC/VAssembler"
+        }
+    ]
+}
