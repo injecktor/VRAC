@@ -10,7 +10,7 @@ add_executable(vasm
         args_handle.cpp
 )
 
-set(CMAKE_CXX_LINK_EXECUTABLE "x86_64-w64-mingw32-g++.exe \"${CMAKE_CURRENT_SOURCE_DIR}/vasm.cpp\" \"${CMAKE_CURRENT_SOURCE_DIR}/args_handle.cpp\" -o \"${CMAKE_CURRENT_SOURCE_DIR}/vasm.exe\"")
+set(CMAKE_CXX_LINK_EXECUTABLE "${CMAKE_CXX_COMPILER} \"${CMAKE_CURRENT_SOURCE_DIR}/vasm.cpp\" \"${CMAKE_CURRENT_SOURCE_DIR}/args_handle.cpp\" -o \"${CMAKE_CURRENT_SOURCE_DIR}/vasm.exe\"")
 
 target_include_directories(vasm PRIVATE 
         ${CMAKE_CURRENT_SOURCE_DIR}
