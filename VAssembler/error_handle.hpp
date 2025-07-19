@@ -1,8 +1,4 @@
-#include <iostream>
-#include <vector>
-#include <string>
-
-extern size_t info_level;
+#include "vasm_logging.hpp"
 
 enum class vasm_error_t {
 
@@ -12,8 +8,6 @@ enum class args_handle_error_t {
     arg_count,
     unexpected_arg,
     unknown_arg,
-    no_input_file
+    no_input_file,
+    duplicated_flag
 };
-
-extern void print_err(const std::string& str);
-extern void print_info(const std::string& str, size_t required_info_level = 1);
