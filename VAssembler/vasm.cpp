@@ -19,9 +19,42 @@ int main(int argc, char *argv[]) {
             case args_handle_error_t::no_input_file:
                 error_str = "No input file.";
                 break;
+            case args_handle_error_t::duplicated_flag:
+                error_str = "Duplicated flag.";
+                break;
         }
         print_err(error_str);
         return 1;
     }
+
+    try {
+        vasm_pre_assemble();
+    }
+    catch (const pre_assemble_error_t& error) {
+
+    }
+
+    try {
+        vasm_assemble();
+    }
+    catch (const assemble_error_t& error) {
+
+    }
+
+    try {
+        // vasm_link();
+    }
+    catch (const link_error_t& error) {
+
+    }
+
+    try {
+        // vasm_load();
+    }
+    catch (const load_error_t& error) {
+
+    }
+
+    print_info("Success", 2);
     return 0;
 }

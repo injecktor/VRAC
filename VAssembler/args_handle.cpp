@@ -5,11 +5,9 @@
     throw _error_; \
 } while (false);
 
-#define THROW_UNIQUE(_flag_) THROW(args_handle_error_t::duplicated_flag, _flag_)
-
 #define CHECK_FLAG_UNIQUE(_flag_) do { \
     if (!check_flag_unique(_flag_)) { \
-        THROW_UNIQUE(_flag_); \
+        THROW(args_handle_error_t::duplicated_flag, _flag_); \
     } \
 } while (false);
 

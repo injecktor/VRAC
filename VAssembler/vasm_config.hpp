@@ -1,3 +1,4 @@
+#pragma once
 #define DEFAULT_VASM_EXTENSION ".vasm"
 
 #define DEFAULT_INFO_LEVEL 0
