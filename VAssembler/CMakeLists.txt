@@ -11,7 +11,13 @@ add_executable(vasm
         vasm_flags.cpp
         vasm_logging.cpp
         pre_assemble/pre_assemble.cpp
+
         assemble/assemble.cpp
+        assemble/decode.cpp
+        assemble/exports.cpp
+        assemble/imports.cpp
+        assemble/tokenizer.cpp
+        assemble/instructions.cpp
 )
 
 target_include_directories(vasm PRIVATE 

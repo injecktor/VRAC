@@ -1,6 +1,11 @@
 #pragma once
-#include "error_handle.hpp"
+#include <list>
+
+#include "vasm_errors.hpp"
 #include "vasm_flags.hpp"
-#include <fstream>
+#include "exports.hpp"
+#include "imports.hpp"
+#include "decode.hpp"
+#include "tokenizer.hpp"
 
 extern void vasm_assemble();

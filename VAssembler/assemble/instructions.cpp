@@ -1,0 +1,70 @@
+#include "instructions.hpp"
+
+std::unordered_set<std::string> instr_set;
+std::unordered_map<std::string, int> reg_map;
+
+void init_instr() {
+    instr_set.clear();
+    instr_set.insert("j");
+    instr_set.insert("je");
+    instr_set.insert("jne");
+    instr_set.insert("jg");
+    instr_set.insert("jge");
+    instr_set.insert("jl");
+    instr_set.insert("jle");
+    instr_set.insert("sw");
+    instr_set.insert("shw");
+    instr_set.insert("sb");
+    instr_set.insert("lw");
+    instr_set.insert("lhw");
+    instr_set.insert("lb");
+    instr_set.insert("cpw");
+    instr_set.insert("cphw");
+    instr_set.insert("cpb");
+    instr_set.insert("add");
+    instr_set.insert("min");
+    instr_set.insert("mul");
+    instr_set.insert("div");
+    instr_set.insert("or");
+    instr_set.insert("nor");
+    instr_set.insert("xor");
+    instr_set.insert("and");
+    instr_set.insert("nand");
+    instr_set.insert("xnand");
+    instr_set.insert("shl");
+    instr_set.insert("shr");
+    instr_set.insert("cmp");
+    instr_set.insert("mod");
+    instr_set.insert("adds");
+    instr_set.insert("mins");
+    instr_set.insert("muls");
+    instr_set.insert("divs");
+    instr_set.insert("abs");
+    instr_set.insert("shrs");
+    instr_set.insert("cmps");
+    instr_set.insert("mods");
+    instr_set.insert("addf");
+    instr_set.insert("minf");
+    instr_set.insert("mulf");
+    instr_set.insert("divf");
+    instr_set.insert("absf");
+    instr_set.insert("cmpf");
+
+    reg_map.clear();
+    reg_map.insert(std::make_pair("r0", 0));
+    reg_map.insert(std::make_pair("r1", 1));
+    reg_map.insert(std::make_pair("r2", 2));
+    reg_map.insert(std::make_pair("r3", 3));
+    reg_map.insert(std::make_pair("r4", 4));
+    reg_map.insert(std::make_pair("r5", 5));
+    reg_map.insert(std::make_pair("r6", 6));
+    reg_map.insert(std::make_pair("r7", 7));
+    reg_map.insert(std::make_pair("r8", 8));
+    reg_map.insert(std::make_pair("r9", 9));
+    reg_map.insert(std::make_pair("r10", 10));
+    reg_map.insert(std::make_pair("r11", 11));
+    reg_map.insert(std::make_pair("r12", 12));
+    reg_map.insert(std::make_pair("r13", 13));
+    reg_map.insert(std::make_pair("r14", 14));
+    reg_map.insert(std::make_pair("r15", 15));
+}

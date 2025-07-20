@@ -4,6 +4,6 @@
 #include <vector>
 #include <unordered_set>
 
-#include "error_handle.hpp"
+#include "vasm_errors.hpp"
 
 extern void parse_args(int argc, char *argv[]);
