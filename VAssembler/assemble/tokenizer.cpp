@@ -28,17 +28,26 @@ std::list<token_t> tokenize(std::ifstream& file) {
     std::list<token_t> tokens;
     token_t token_tmp;
     std::string line, token_str;
+    char chr;
     while (std::getline(file, line)) {
         size_t offset = 0, offset_tmp;
-        while ((offset_tmp = line.find(' ', offset)) != std::string::npos) {
-            token_str = line.substr(offset + 1, offset_tmp - offset);
-            token_tmp = std::move(get_token(token_str));
-            if (token_tmp.type == token_type_t::none) {
-                vasm_flags.last_error_extra_msg = token_str;
-                throw assemble_error_t::tokenizer;
+        while (offset < line.length()) {
+            if ((offset_tmp = line.find(' ', offset)) == std::string::npos) {
+                offset_tmp = line.length();
             }
-            tokens.emplace_back();
+            token_str = line.substr(offset, offset_tmp - offset);
+            if (!token_str.empty()) {
+                print_info("Tokenizing: " + token_str, 3); 
+                token_tmp = std::move(get_token(token_str));
+                if (token_tmp.type == token_type_t::none) {
+                    vasm_flags.last_error_extra_msg = token_str;
+                    throw assemble_error_t::tokenizer;
+                }
+                tokens.emplace_back(std::move(token_tmp));
+            }
+            offset = offset_tmp + 1;
         }
     }
+    print_info("Tokenizer complete.", 2);
     return tokens;
 }

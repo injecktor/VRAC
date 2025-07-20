@@ -33,5 +33,6 @@ void vasm_assemble() {
                 throw assemble_error_t::unknown;
             }
         }
+        vasm_flags.input_files_path.pop();
     }
 }

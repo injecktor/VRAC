@@ -43,6 +43,7 @@ int main(int argc, char *argv[]) {
                 break;
         }
         print_err(error_str);
+        return 1;
     }
     catch (const link_error_t& error) {
 

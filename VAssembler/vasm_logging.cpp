@@ -2,7 +2,7 @@
 
 void print_err(const std::string& str) {
     std::cout << ERROR_MESSAGE << str << std::endl;
-    if (!vasm_flags.last_error_extra_msg.empty()) {
+    if (!vasm_flags.last_error_extra_msg.empty() || vasm_flags.info_level > 1) {
         print_info(vasm_flags.last_error_extra_msg, 1);
     }
 }
