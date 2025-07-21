@@ -7,5 +7,6 @@
 #include "imports.hpp"
 #include "decode.hpp"
 #include "tokenizer.hpp"
+#include "file_handle.hpp"
 
 extern void vasm_assemble();

@@ -4,13 +4,13 @@ void assemble_init() {
     init_instr();
 }
 
-bool file_need_compile(const std::ifstream& file) {
+bool file_need_compile(const vasm_file_t& file) {
     return true;
 }
 
 void vasm_assemble() {
-    std::ifstream input_file;
-    std::ofstream output_file(vasm_flags.output_path);
+    vasm_file_t input_file(file_mode_t::read);
+    
     std::string input_path;
     std::list<token_t> tokens;
 
@@ -22,6 +22,7 @@ void vasm_assemble() {
         if (file_need_compile(input_file)) {
             try {
                 tokens = tokenize(input_file);
+                input_file.reopen();
                 create_exports(tokens);
                 create_imports_request(tokens);
                 decode(tokens);

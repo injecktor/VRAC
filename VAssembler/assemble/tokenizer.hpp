@@ -9,11 +9,12 @@
 #include "instructions.hpp"
 #include "vasm_flags.hpp"
 #include "vasm_errors.hpp"
+#include "file_handle.hpp"
 
 enum class token_type_t {
     none,
     marker,
-    instruction,
+    command,
     reg,
     literal,
     func
@@ -25,4 +26,4 @@ struct token_t {
     int num;
 };
 
-extern std::list<token_t> tokenize(std::ifstream& file);
+extern std::list<token_t> tokenize(vasm_file_t& file);

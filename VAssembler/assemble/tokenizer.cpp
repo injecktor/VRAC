@@ -5,8 +5,8 @@ static token_t get_token(const std::string& str) {
     std::unordered_map<std::string, int>::iterator map_iterator;
     int tmp = 0;
     token.type = token_type_t::none;
-    if (instr_set.find(str) != instr_set.end()) {
-        token.type = token_type_t::instruction;
+    if (cmd_set.find(str) != cmd_set.end()) {
+        token.type = token_type_t::command;
         token.str = str;
     } else if ((map_iterator = reg_map.find(str)) != reg_map.end()) {
         token.type = token_type_t::reg;
@@ -24,12 +24,12 @@ static token_t get_token(const std::string& str) {
     return token;
 }
 
-std::list<token_t> tokenize(std::ifstream& file) {
+std::list<token_t> tokenize(vasm_file_t& file) {
     std::list<token_t> tokens;
     token_t token_tmp;
     std::string line, token_str;
     char chr;
-    while (std::getline(file, line)) {
+    while (file.read_line(line)) {
         size_t offset = 0, offset_tmp;
         while (offset < line.length()) {
             if ((offset_tmp = line.find(' ', offset)) == std::string::npos) {
