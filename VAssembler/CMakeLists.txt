@@ -10,6 +10,8 @@ add_executable(vasm
         args_handle.cpp
         vasm_flags.cpp
         vasm_logging.cpp
+        file_handle.cpp
+
         pre_assemble/pre_assemble.cpp
 
         assemble/assemble.cpp
