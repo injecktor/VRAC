@@ -5,7 +5,7 @@
 #include "vasm_flags.hpp"
 #include "exports.hpp"
 #include "imports.hpp"
-#include "decode.hpp"
+#include "decoder.hpp"
 #include "tokenizer.hpp"
 #include "file_handle.hpp"
 

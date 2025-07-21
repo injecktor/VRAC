@@ -74,6 +74,7 @@ void init_instr() {
     reg_map.insert(std::make_pair("r14", 14));
     reg_map.insert(std::make_pair("r15", 15));
 
+    instr_map.clear();
     instr_map_insert("j", instr_type_t::sr, 0b10000, 0);
     instr_map_insert("j", instr_type_t::sl, 0b1001, 0);
     instr_map_insert("je", instr_type_t::sr, 0b10010, 0);

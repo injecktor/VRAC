@@ -1,9 +1,4 @@
 j 27
-je -987
-jge 0
 cpw r0 r1
 cphw r2 r3
 cpb r4 r5
-add r6 -111
-min r7 r8
-mul r9 r10

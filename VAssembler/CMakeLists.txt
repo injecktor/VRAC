@@ -15,7 +15,7 @@ add_executable(vasm
         pre_assemble/pre_assemble.cpp
 
         assemble/assemble.cpp
-        assemble/decode.cpp
+        assemble/decoder.cpp
         assemble/exports.cpp
         assemble/imports.cpp
         assemble/tokenizer.cpp

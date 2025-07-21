@@ -16,7 +16,7 @@ enum class pre_assemble_error_t {
 enum class assemble_error_t {
     unknown,
     tokenizer,
-
+    decoder
 };
 
 enum class link_error_t {
