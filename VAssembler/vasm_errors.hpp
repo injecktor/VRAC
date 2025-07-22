@@ -1,6 +1,10 @@
 #pragma once
 #include "vasm_logging.hpp"
 
+enum class vasm_error_t {
+    file_doesnt_exist
+};
+
 enum class args_handle_error_t {
     arg_count,
     unexpected_arg,

@@ -7,9 +7,9 @@ void print_err(const std::string& str) {
     }
 }
 
-void print_info(const std::string& str, size_t required_info_level) {
-    if (required_info_level == 0) {
-        required_info_level = 1;
+void print_info(const std::string& str, int required_info_level) {
+    if (required_info_level < 0) {
+        required_info_level = 0;
     }
     if (required_info_level > INFO_LEVEL_MAX) {
         required_info_level = INFO_LEVEL_MAX;

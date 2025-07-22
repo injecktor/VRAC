@@ -8,6 +8,14 @@ int main(int argc, char *argv[]) {
         vasm_assemble();
         // vasm_link();
         // vasm_load();
+        print_info("Success", 2);
+    }
+    catch (const vasm_error_t& error) {
+        switch (error) {
+            case vasm_error_t::file_doesnt_exist:
+                error_str = "File doesn't exist.";
+                break;
+        }
     }
     catch (const args_handle_error_t& error) {
         switch (error) {
@@ -55,6 +63,5 @@ int main(int argc, char *argv[]) {
         print_err("Uncaught error.");
     }
 
-    print_info("Success", 2);
     return 0;
 }

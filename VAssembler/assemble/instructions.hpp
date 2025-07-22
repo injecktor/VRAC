@@ -4,7 +4,7 @@
 #include <unordered_set>
 #include <unordered_map>
 
-enum class instr_type_t {
+enum class instruction_type_t {
     unknown,
     sl,
     sr,
@@ -17,8 +17,8 @@ enum class instr_type_t {
 
 struct instruction_t {
     std::string cmd;
-    instr_type_t type;
-    instruction_t(std::string cmd, instr_type_t type)
+    instruction_type_t type;
+    instruction_t(std::string cmd, instruction_type_t type)
         : cmd(cmd), type(type){};
 
     bool operator==(const instruction_t& other) const {
@@ -29,18 +29,18 @@ struct instruction_t {
     } 
 };
 
-struct vasm_code_t {
-    int opcode;
-    int alucode;
-    vasm_code_t(int opcode, int alucode)
+struct instruction_code_t {
+    size_t opcode;
+    size_t alucode;
+    instruction_code_t(size_t opcode, size_t alucode)
         : opcode(opcode), alucode(alucode){};
+};
 
-    bool operator==(const vasm_code_t& other) const {
-        if (opcode == other.opcode && alucode == other.alucode) {
-            return true;
-        }
-        return false;
-    } 
+struct instruction_type_info_t {
+    size_t literal_bits;
+    size_t instr_size;
+    instruction_type_info_t(size_t literal_bits, size_t instr_size)
+        : literal_bits(literal_bits), instr_size(instr_size){};
 };
 
 template<>
@@ -52,19 +52,9 @@ class std::hash<instruction_t> {
     }
 };
 
-template<>
-class std::hash<vasm_code_t> {
-    public:
-    size_t operator()(const vasm_code_t &code) const {
-        std::string data = std::to_string(code.opcode) + std::to_string(code.alucode);
-        return std::hash<std::string>()(data);
-    }
-};
-
-
-
 extern std::unordered_set<std::string> cmd_set;
 extern std::unordered_map<std::string, int> reg_map;
-extern std::unordered_map<instruction_t, vasm_code_t> instr_map;
+extern std::unordered_map<instruction_t, instruction_code_t> instr_map;
+extern std::unordered_map<instruction_type_t, instruction_type_info_t> instr_type_info_map;
 
 extern void init_instr();

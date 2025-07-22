@@ -52,7 +52,7 @@ class std::hash<instr_type_by_tokens_t> {
     }
 };
 
-extern std::unordered_map<instr_type_by_tokens_t, instr_type_t> instr_type_map;
+extern std::unordered_map<instr_type_by_tokens_t, instruction_type_t> instr_type_map;
 
 extern void tokenizer_init();
 extern std::list<token_t> tokenize(vasm_file_t& file);

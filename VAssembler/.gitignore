@@ -2,3 +2,5 @@ build
 *.exe
 .vscode/*
 !.vscode/tasks.json
+
+*.leobj

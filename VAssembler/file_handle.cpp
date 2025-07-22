@@ -20,7 +20,7 @@ bool vasm_file_t::open(std::string path) {
                 return false;
         }
     }
-    catch (const std::ios_base::failure& error) {
+    catch (...) {
         vasm_flags.last_error_extra_msg = "Failed opening: " + path;
         return false;
     }
