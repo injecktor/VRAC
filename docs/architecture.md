@@ -28,12 +28,12 @@ Little endian.
 |jl|jump if less|SL-type|11011|||
 |jle|jump if less or equal|SR-type|11100|||
 |jle|jump if less or equal|SL-type|11101|||
-|sw|store word|SR-type|00001|||
-|shw|store half word|SR-type|00010|||
-|sb|store byte|SR-type|00011|||
-|lw|load word|SR-type|00100|||
-|lhw|load half word|SR-type|00101|||
-|lb|load byte|SR-type|00110|||
+|sw|store word|DR-type|00001|||
+|shw|store half word|DR-type|00010|||
+|sb|store byte|DR-type|00011|||
+|lw|load word|DR-type|00100|||
+|lhw|load half word|DR-type|00101|||
+|lb|load byte|DR-type|00110|||
 |cpw|copy word|DR-type|00111|||
 |cpw|copy word|RL-type|01000|||
 |cphw|copy half word|DR-type|01001||Copies 16 LSB|
