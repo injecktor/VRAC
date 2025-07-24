@@ -91,13 +91,13 @@ void init_instr() {
     instr_map_insert("jle", instruction_type_t::sr, 0b11100, 0);
     instr_map_insert("jle", instruction_type_t::sl, 0b11101, 0);
 
-    instr_map_insert("sw", instruction_type_t::sr, 0b00001, 0);
-    instr_map_insert("shw", instruction_type_t::sr, 0b00010, 0);
-    instr_map_insert("sb", instruction_type_t::sr, 0b00011, 0);
+    instr_map_insert("sw", instruction_type_t::dr, 0b00001, 0);
+    instr_map_insert("shw", instruction_type_t::dr, 0b00010, 0);
+    instr_map_insert("sb", instruction_type_t::dr, 0b00011, 0);
 
-    instr_map_insert("lw", instruction_type_t::sr, 0b00100, 0);
-    instr_map_insert("lhw", instruction_type_t::sr, 0b00101, 0);
-    instr_map_insert("lb", instruction_type_t::sr, 0b00110, 0);
+    instr_map_insert("lw", instruction_type_t::dr, 0b00100, 0);
+    instr_map_insert("lhw", instruction_type_t::dr, 0b00101, 0);
+    instr_map_insert("lb", instruction_type_t::dr, 0b00110, 0);
 
     instr_map_insert("cpw", instruction_type_t::dr, 0b00111, 0);
     instr_map_insert("cpw", instruction_type_t::rl, 0b01000, 0);
