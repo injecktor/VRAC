@@ -7,13 +7,13 @@ void tokenizer_init() {
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("j", std::vector{token_type_t::reg}), instruction_type_t::sr));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("j", std::vector{token_type_t::literal}), instruction_type_t::sl));
 
-    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("sw", std::vector{token_type_t::reg}), instruction_type_t::sr));
-    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("shw", std::vector{token_type_t::reg}), instruction_type_t::sr));
-    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("sb", std::vector{token_type_t::reg}), instruction_type_t::sr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("sw", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("shw", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("sb", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
 
-    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("lw", std::vector{token_type_t::reg}), instruction_type_t::sr));
-    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("lhw", std::vector{token_type_t::reg}), instruction_type_t::sr));
-    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("lb", std::vector{token_type_t::reg}), instruction_type_t::sr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("lw", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("lhw", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("lb", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
 
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("cpw", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("cpw", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::rl));

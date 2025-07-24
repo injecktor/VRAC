@@ -49,6 +49,9 @@ int main(int argc, char *argv[]) {
             case assemble_error_t::tokenizer:
                 error_str = "Tokenizer error.";
                 break;
+            case assemble_error_t::decoder:
+                error_str = "Decoder error.";
+                break;
         }
         print_err(error_str);
         return 1;

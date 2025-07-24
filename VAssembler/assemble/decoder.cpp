@@ -19,7 +19,7 @@ static std::string decode_instr(std::vector<token_t> instr_tokens, const instruc
     auto instr_code_pair = instr_map.find(instruction_t(instr_tokens[0].str, type));
     if (instr_code_pair == instr_map.cend()) {
         vasm_flags.last_error_extra_msg = "Unknown opcode: " + get_full_instr_str(instr_tokens);
-        throw;
+        throw 0;
     }
     auto instr_code = instr_code_pair->second;
     switch (type) {
@@ -30,7 +30,7 @@ static std::string decode_instr(std::vector<token_t> instr_tokens, const instruc
             instr = ((instr_code.opcode) << 27) | (instr_tokens[1].num << 23);
             break;
         case instruction_type_t::dr:
-            instr = ((instr_code.opcode) << 27) | (instr_tokens[1].num << 23) | (instr_tokens[1].num << 19);
+            instr = ((instr_code.opcode) << 27) | (instr_tokens[1].num << 23) | (instr_tokens[2].num << 19);
             break;
         case instruction_type_t::rl:
             instr = ((instr_code.opcode) << 27) | (instr_tokens[1].num << 23) | (instr_tokens[2].num << 19);
@@ -93,14 +93,13 @@ void decode(const std::list<token_t>& tokens, vasm_file_t& output) {
                 auto instr_type = instr_type_pair->second;
                 for (auto&& elem : instr_tokens) {
                     if (elem.type == token_type_t::literal) {
-                        auto literal_bits_restriction = 1 <<  instr_type_info_map.find(instr_type)->second.literal_bits;
+                        auto literal_bits_restriction = 1 << instr_type_info_map.find(instr_type)->second.literal_bits;
                         if ((it->num >= 0 && it->num >= literal_bits_restriction) ||
                             it->num < 0 && std::abs(it->num) > literal_bits_restriction) {
                                 vasm_flags.last_error_extra_msg = "Literal limit exceeded: " + elem.num;
                         }
                     }
                 }
-
                 try {
                     output.write_line(decode_instr(instr_tokens, instr_type, instr_type_info_map.find(instr_type)->second.instr_size));
                 }
