@@ -61,16 +61,19 @@ bool vasm_file_t::write_line(const std::string& str) {
 }
 
 bool vasm_file_t::delete_file() {
-    if (mode == file_mode_t::write) {
+    if (mode == file_mode_t::write && path != "") {
         close();
-        std::filesystem::remove(path);
-        return false;
+        return !std::filesystem::remove(path);
     }
-    return true;
+    return false;
 }
 
 bool vasm_file_t::is_open() {
     return input.is_open() || output.is_open();
+}
+
+bool vasm_file_t::delete_file(std::string path) {
+    return !std::filesystem::remove(path);
 }
 
 vasm_file_t::~vasm_file_t() {

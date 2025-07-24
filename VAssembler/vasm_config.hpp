@@ -7,4 +7,5 @@
 #define ERROR_MESSAGE "[ERROR]: "
 #define INFO_MESSAGE "[INFO]: "
 
+#define VASM_HEX_FORMAT_STR "v3.0 hex words plain"
 #define BYTES_PER_LINE_VASM_OBJECT 20

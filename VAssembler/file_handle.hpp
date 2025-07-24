@@ -29,6 +29,8 @@ public:
     bool is_open();
     ~vasm_file_t();
 
+    static bool delete_file(std::string path);
+
 private:
     std::string path;
     file_mode_t mode;

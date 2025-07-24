@@ -26,10 +26,12 @@ void vasm_assemble() {
             try {
                 input_file.reopen();
                 tokens = tokenize(input_file);
+                vasm_file_t::delete_file(vasm_flags.output_path);
+                output_file.open(vasm_flags.output_path);
+                output_file.write_line(VASM_HEX_FORMAT_STR);
                 create_exports(tokens);
                 create_imports_request(tokens);
                 
-                output_file.open(vasm_flags.output_path);
                 decode(tokens, output_file);
                 output_file.close();
             }
