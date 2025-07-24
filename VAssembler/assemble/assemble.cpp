@@ -24,8 +24,8 @@ void vasm_assemble() {
         }
         if (file_need_compile(input_file)) {
             try {
-                tokens = tokenize(input_file);
                 input_file.reopen();
+                tokens = tokenize(input_file);
                 create_exports(tokens);
                 create_imports_request(tokens);
                 
@@ -34,12 +34,17 @@ void vasm_assemble() {
                 output_file.close();
             }
             catch (const assemble_error_t& error) {
+                input_file.close();
+                output_file.delete_file();
                 throw error;
             }
             catch (...) {
+                input_file.close();
+                output_file.delete_file();
                 throw assemble_error_t::unknown;
             }
         }
         vasm_flags.input_files_path.pop();
     }
+    input_file.close();
 }

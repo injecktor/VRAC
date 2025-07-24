@@ -48,8 +48,29 @@ bool vasm_file_t::read_line(std::string& str) {
     return false;
 }
 
-void vasm_file_t::write_line(const std::string& str) {
-    output << str << std::endl;
+bool vasm_file_t::write_line(const std::string& str) {
+    try {
+        output << str << std::endl;
+    }
+    catch (...) {
+        vasm_flags.last_error_extra_msg = "Failed writing: " + str;
+        vasm_flags.last_error_extra_msg = " in: " + path;
+        return false;
+    }
+    return true;
+}
+
+bool vasm_file_t::delete_file() {
+    if (mode == file_mode_t::write) {
+        close();
+        std::filesystem::remove(path);
+        return false;
+    }
+    return true;
+}
+
+bool vasm_file_t::is_open() {
+    return input.is_open() || output.is_open();
 }
 
 vasm_file_t::~vasm_file_t() {

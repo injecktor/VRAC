@@ -6,6 +6,7 @@
 
 #if defined(WIN32) || defined(_WIN32)
 #include <fstream>
+#include <filesystem>
 #elif defined(linux)
 
 #endif
@@ -23,7 +24,9 @@ public:
     void close();
     bool reopen();
     bool read_line(std::string& str);
-    void write_line(const std::string& str);
+    bool write_line(const std::string& str);
+    bool delete_file();
+    bool is_open();
     ~vasm_file_t();
 
 private:
