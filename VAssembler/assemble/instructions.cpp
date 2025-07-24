@@ -77,7 +77,7 @@ void init_instr() {
 
     instr_map.clear();
     instr_map_insert("j", instruction_type_t::sr, 0b10000, 0);
-    instr_map_insert("j", instruction_type_t::sl, 0b1001, 0);
+    instr_map_insert("j", instruction_type_t::sl, 0b10001, 0);
     instr_map_insert("je", instruction_type_t::sr, 0b10010, 0);
     instr_map_insert("je", instruction_type_t::sl, 0b10011, 0);
     instr_map_insert("jne", instruction_type_t::sr, 0b10100, 0);
