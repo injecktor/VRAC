@@ -1,6 +1,2 @@
-sw r1 r2
-shw r1 r2
-sb r1 r2
-lw r1 r2
-lhw r1 r2
-lb r1 r2
+add r1 r2
+min r3 r4

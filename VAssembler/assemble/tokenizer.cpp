@@ -6,23 +6,61 @@ void tokenizer_init() {
     instr_type_map.clear();
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("j", std::vector{token_type_t::reg}), instruction_type_t::sr));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("j", std::vector{token_type_t::literal}), instruction_type_t::sl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("je", std::vector{token_type_t::reg}), instruction_type_t::sr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("je", std::vector{token_type_t::literal}), instruction_type_t::sl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("jne", std::vector{token_type_t::reg}), instruction_type_t::sr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("jne", std::vector{token_type_t::literal}), instruction_type_t::sl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("jg", std::vector{token_type_t::reg}), instruction_type_t::sr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("jg", std::vector{token_type_t::literal}), instruction_type_t::sl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("jge", std::vector{token_type_t::reg}), instruction_type_t::sr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("jge", std::vector{token_type_t::literal}), instruction_type_t::sl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("jl", std::vector{token_type_t::reg}), instruction_type_t::sr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("jl", std::vector{token_type_t::literal}), instruction_type_t::sl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("jle", std::vector{token_type_t::reg}), instruction_type_t::sr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("jle", std::vector{token_type_t::literal}), instruction_type_t::sl));
 
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("sw", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("shw", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("sb", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
-
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("lw", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("lhw", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("lb", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
 
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("cpw", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("cpw", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::rl));
-
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("cphw", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("cphw", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::rl));
-
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("cpb", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("cpb", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::rl));
+
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("add", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::adr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("add", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("min", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::adr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("min", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("mul", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::adr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("mul", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("div", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::adr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("div", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("or", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::adr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("or", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("nor", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::adr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("nor", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("xor", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::adr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("xor", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("and", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::adr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("and", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("nand", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::adr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("nand", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("xnand", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::adr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("xnand", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("shl", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::adr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("shl", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("shr", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::adr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("shr", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("cmd", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::adr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("cmd", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("mod", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::adr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("mod", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
 }
 
 static token_t get_token(const std::string& str) {

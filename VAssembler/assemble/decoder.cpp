@@ -36,13 +36,13 @@ static std::string decode_instr(std::vector<token_t> instr_tokens, const instruc
             instr = ((instr_code.opcode) << 27) | (instr_tokens[1].num << 23) | (instr_tokens[2].num << 19);
             break;
         case instruction_type_t::asr:
-            instr = ((instr_code.opcode) << 27) | ((instr_code.opcode) << 21) | (instr_tokens[1].num << 17);
+            instr = ((instr_code.opcode) << 27) | ((instr_code.alucode) << 21) | (instr_tokens[1].num << 17);
             break;
         case instruction_type_t::adr:
-            instr = ((instr_code.opcode) << 27) | ((instr_code.opcode) << 21) | (instr_tokens[1].num << 17) | (instr_tokens[2].num << 13);
+            instr = ((instr_code.opcode) << 27) | ((instr_code.alucode) << 21) | (instr_tokens[1].num << 17) | (instr_tokens[2].num << 13);
             break;
         case instruction_type_t::arl:
-            instr = ((instr_code.opcode) << 27) | ((instr_code.opcode) << 21) | (instr_tokens[1].num << 17) | instr_tokens[2].num;
+            instr = ((instr_code.opcode) << 27) | ((instr_code.alucode) << 21) | (instr_tokens[1].num << 17) | instr_tokens[2].num;
             break;
         default:
             vasm_flags.last_error_extra_msg = "Unknown instruction type: " + static_cast<size_t>(type);
