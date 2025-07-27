@@ -58,8 +58,6 @@ Little endian.
 |and|logical *and*|ARL-type|00000|100101||
 |nand|logical *nand*|ADR-type|00000|100110||
 |nand|logical *nand*|ARL-type|00000|100111||
-|xnand|logical *xnand*|ADR-type|00000|100010||
-|xnand|logical *xnand*|ARL-type|00000|100011||
 |shl|shift left|ADR-type|00000|011000||
 |shl|shift left|ARL-type|00000|011001||
 |shr|shift right|ADR-type|00000|011010||
@@ -127,9 +125,9 @@ In VRAC all instructions divided in 7 types ("**/**" defines size in bits):
 
 - SL-type (Simple Literal) (4 bytes)
 
-    |opcode/5|literal/27|
+    |opcode/5|unused/11|literal/16|
     |:-:|:-:|
-    |**xxxxx**|**xxxxxxxxxxxxxxxxxxxxxxxxxxx**|
+    |**xxxxx**|**xxxxxxxxxxx**|**xxxxxxxxxxxxxxxx**|
 
 - SR-type (Simple Register) (2 bytes)
 
@@ -145,9 +143,9 @@ In VRAC all instructions divided in 7 types ("**/**" defines size in bits):
 
 - RL-type (Register Literal) (4 bytes)
 
-    |opcode/5|register/4|literal/23|
+    |opcode/5|register/4|unused/7|literal/16|
     |:-:|:-:|:-:|
-    |**xxxxx**|**xxxx**|**xxxxxxxxxxxxxxxxxxxxxxx**|
+    |**xxxxx**|**xxxx**|**xxxxxxx**|**xxxxxxxxxxxxxxxx**|
 
 - ASR-type (ALU Simple Register) (2 bytes)
 
@@ -163,6 +161,6 @@ In VRAC all instructions divided in 7 types ("**/**" defines size in bits):
 
 - ARL-type (ALU Register Literal) (4 bytes)
 
-    |opcode/5|alucode/6|register/4|literal/17|
+    |opcode/5|alucode/6|register/4|unused/1|literal/16|
     |:-:|:-:|:-:|:-:|
-    |**00000**|**xxxxx1**|**xxxx**|**xxxxxxxxxxxxxxxxx**|
+    |**00000**|**xxxxx1**|**xxxx**|**x**|**xxxxxxxxxxxxxxxx**|

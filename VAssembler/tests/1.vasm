@@ -1,2 +1,4 @@
-add r1 r2
-min r3 r4
+add r0 10
+add r1 20
+cmp r0 r1
+je 0x20

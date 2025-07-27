@@ -124,8 +124,6 @@ void init_instr() {
     instr_map_insert("and", instruction_type_t::arl, 0, 0b100101);
     instr_map_insert("nand", instruction_type_t::adr, 0, 0b100110);
     instr_map_insert("nand", instruction_type_t::arl, 0, 0b100111);
-    instr_map_insert("xnand", instruction_type_t::adr, 0, 0b100010);
-    instr_map_insert("xnand", instruction_type_t::arl, 0, 0b100011);
     instr_map_insert("shl", instruction_type_t::adr, 0, 0b011000);
     instr_map_insert("shl", instruction_type_t::arl, 0, 0b011001);
     instr_map_insert("shr", instruction_type_t::adr, 0, 0b011010);
@@ -166,11 +164,11 @@ void init_instr() {
     instr_map_insert("cmpf", instruction_type_t::arl, 0, 0b110001);
 
     instr_type_info_map.clear();
-    instr_type_info_map.insert(std::make_pair(instruction_type_t::sl, instruction_type_info_t(27, 4)));
+    instr_type_info_map.insert(std::make_pair(instruction_type_t::sl, instruction_type_info_t(16, 4)));
     instr_type_info_map.insert(std::make_pair(instruction_type_t::sr, instruction_type_info_t(0, 2)));
     instr_type_info_map.insert(std::make_pair(instruction_type_t::dr, instruction_type_info_t(0, 2)));
-    instr_type_info_map.insert(std::make_pair(instruction_type_t::rl, instruction_type_info_t(23, 4)));
+    instr_type_info_map.insert(std::make_pair(instruction_type_t::rl, instruction_type_info_t(16, 4)));
     instr_type_info_map.insert(std::make_pair(instruction_type_t::asr, instruction_type_info_t(0, 2)));
     instr_type_info_map.insert(std::make_pair(instruction_type_t::adr, instruction_type_info_t(0, 3)));
-    instr_type_info_map.insert(std::make_pair(instruction_type_t::arl, instruction_type_info_t(17, 4)));
+    instr_type_info_map.insert(std::make_pair(instruction_type_t::arl, instruction_type_info_t(16, 4)));
 }

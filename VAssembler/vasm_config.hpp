@@ -8,4 +8,5 @@
 #define INFO_MESSAGE "[INFO]: "
 
 #define VASM_HEX_FORMAT_STR "v3.0 hex words plain"
+#define ONE_INSTRUCTION_PER_LINE_VASM_OBJECT 1
 #define BYTES_PER_LINE_VASM_OBJECT 20
