@@ -28,6 +28,8 @@ Little endian.
 |jl|jump if less|SL-type|11011|||
 |jle|jump if less or equal|SR-type|11100|||
 |jle|jump if less or equal|SL-type|11101|||
+|push|store word in stack|SR-type|11110|||
+|pop|load word from stack|SR-type|11111|||
 |sw|store word|DR-type|00001|||
 |shw|store half word|DR-type|00010|||
 |sb|store byte|DR-type|00011|||
