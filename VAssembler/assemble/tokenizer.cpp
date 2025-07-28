@@ -55,8 +55,8 @@ void tokenizer_init() {
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("shl", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("shr", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::adr));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("shr", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
-    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("cmd", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::adr));
-    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("cmd", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("cmp", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::adr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("cmp", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("mod", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::adr));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("mod", std::vector{token_type_t::reg, token_type_t::literal}), instruction_type_t::arl));
 }
