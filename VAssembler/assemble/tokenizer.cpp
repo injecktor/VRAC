@@ -18,6 +18,8 @@ void tokenizer_init() {
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("jl", std::vector{token_type_t::literal}), instruction_type_t::sl));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("jle", std::vector{token_type_t::reg}), instruction_type_t::sr));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("jle", std::vector{token_type_t::literal}), instruction_type_t::sl));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("push", std::vector{token_type_t::reg}), instruction_type_t::sr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("pop", std::vector{token_type_t::reg}), instruction_type_t::sr));
 
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("sw", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("shw", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
