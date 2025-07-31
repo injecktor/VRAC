@@ -1,5 +1,6 @@
-add r0 0x8888
-add r15 0x20
-push r0
-add r2 0x11
-pop r1
+add r0 10
+add r1 11
+add r2 cia-2
+add r3 cia+2
+add r4 12
+add r5 13

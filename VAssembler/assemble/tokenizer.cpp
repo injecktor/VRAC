@@ -64,8 +64,9 @@ void tokenizer_init() {
 }
 
 static token_t get_token(const std::string& str) {
-    token_t token;
     std::unordered_map<std::string, int>::iterator map_iterator;
+    std::string str_tmp;
+    token_t token;
     int tmp = 0;
     token.type = token_type_t::none;
     if (cmd_set.find(str) != cmd_set.end()) {
@@ -73,6 +74,22 @@ static token_t get_token(const std::string& str) {
     } else if ((map_iterator = reg_map.find(str)) != reg_map.end()) {
         token.type = token_type_t::reg;
         token.num = map_iterator->second;
+    } else if (str.substr(0, 3) == "cia") {
+        token.type = token_type_t::cia;
+        if (str.length() > 3) {
+            str_tmp = str.substr(3);
+            try {
+                tmp = stoi(str_tmp, nullptr, 10);
+            }
+            catch(...) {
+                token.type = token_type_t::none;
+            }
+            token.num = tmp;
+        }
+    } else if (str == "export") {
+        token.type = token_type_t::exp;
+    } else if (str == "func") {
+        token.type = token_type_t::func;
     } else {
         token.type = token_type_t::literal;
         try {
@@ -100,7 +117,7 @@ std::list<token_t> tokenize(vasm_file_t& file) {
             }
             token_str = line.substr(offset, offset_tmp - offset);
             if (!token_str.empty()) {
-                print_info("Tokenizing: " + token_str, 3); 
+                print_info("Tokenizing: " + token_str, 3);
                 token_tmp = std::move(get_token(token_str));
                 if (token_tmp.type == token_type_t::none) {
                     vasm_flags.last_error_extra_msg = token_str;

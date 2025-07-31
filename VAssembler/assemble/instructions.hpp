@@ -5,7 +5,6 @@
 #include <unordered_map>
 
 enum class instruction_type_t {
-    unknown,
     sl,
     sr,
     dr,

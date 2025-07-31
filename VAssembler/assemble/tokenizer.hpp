@@ -13,11 +13,13 @@
 
 enum class token_type_t {
     none,
-    marker,
+    label,
     command,
     reg,
     literal,
-    func
+    exp,
+    func,
+    cia
 };
 
 struct token_t {

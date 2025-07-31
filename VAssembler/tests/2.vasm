@@ -1,0 +1,24 @@
+j main
+export func test:
+    add r4 0x99
+    add r4 0x1
+    cpw r5 r4
+    pop r14
+    j r14
+func main:
+    add r15 0x20
+
+    add r0 0x6
+    add r1 0x5
+
+    cmp r0 r1
+    je cia+3
+    add r2 0
+    j cia+2
+
+    add r2 1
+
+    add r3 0x15
+    push cia+2
+    j test
+    add r5 0x1

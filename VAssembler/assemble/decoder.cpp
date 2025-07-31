@@ -60,57 +60,91 @@ static std::string decode_instr(std::vector<token_t> instr_tokens, const instruc
     return stream.str();
 }
 
-void decode(const std::list<token_t>& tokens, vasm_file_t& output) {
-    std::vector<token_type_t> token_types;
-    std::vector<token_t> instr_tokens;
-    std::string full_instr;
+std::list<std::string> decode(const std::list<token_t>& tokens) {
+    std::list<std::string> decoded_instr;
+    std::vector<decode_info_t> decode_info;
+    decode_info_t *current_decode_info;
     size_t line_number = 0;
 
-    tokenizer_init();
-
-    auto it = tokens.cbegin();
-    int expect_operand_count = -1;
-    while (it != tokens.cend()) {
-        switch(it->type) {
+    auto tokens_it = tokens.cbegin();
+    while (tokens_it != tokens.cend()) {
+        switch(tokens_it->type) {
             case token_type_t::command: {
-                line_number++;
-                token_types.clear();
-                instr_tokens.clear();
-                instr_tokens.emplace_back(*it);
-                it++;
-                while (it != tokens.cend() && (it->type == token_type_t::reg || it->type == token_type_t::literal)) {
-                    instr_tokens.emplace_back(*it);
-                    token_types.emplace_back(it->type);
-                    it++;
+                decode_info.push_back({});
+                current_decode_info = &decode_info.back();
+                current_decode_info->tokens.emplace_back(*tokens_it);
+                tokens_it++;
+                while (tokens_it != tokens.cend() && (tokens_it->type == token_type_t::reg || tokens_it->type == token_type_t::literal || tokens_it->type == token_type_t::cia)) {
+                    current_decode_info->tokens.emplace_back(*tokens_it);
+                    if (tokens_it->type == token_type_t::cia) {
+                        current_decode_info->token_types.emplace_back(token_type_t::literal);
+                    } else {
+                        current_decode_info->token_types.emplace_back(tokens_it->type);
+                    }
+                    tokens_it++;
                 }
-                full_instr = get_full_instr_str(instr_tokens);
-                print_info("Decoding instruction: " + full_instr, 3);
-                auto instr_type_pair = instr_type_map.find(instr_type_by_tokens_t(instr_tokens[0].str, token_types));
+                current_decode_info->instr_str = get_full_instr_str(current_decode_info->tokens);
+                print_info("Decoding instruction: " + current_decode_info->instr_str, 3);
+                auto instr_type_pair = instr_type_map.find(instr_type_by_tokens_t(current_decode_info->tokens[0].str, current_decode_info->token_types));
                 if (instr_type_pair == instr_type_map.cend()) {
-                    vasm_flags.last_error_extra_msg = "Unknown instruction type of: " + full_instr;
+                    vasm_flags.last_error_extra_msg = "Unknown instruction type of: " + current_decode_info->instr_str;
                     throw assemble_error_t::decoder;
                 }
-                auto instr_type = instr_type_pair->second;
-                for (auto&& elem : instr_tokens) {
+                current_decode_info->instr_type = instr_type_pair->second;
+                auto instr_type_info_pair = instr_type_info_map.find(current_decode_info->instr_type);
+                if (instr_type_info_pair == instr_type_info_map.cend()) {
+                    vasm_flags.last_error_extra_msg = "Couldn't find instruction type information: " + current_decode_info->instr_str;
+                    throw assemble_error_t::decoder;
+                }
+                current_decode_info->instr_size = instr_type_info_pair->second.instr_size;
+                for (auto&& elem : current_decode_info->tokens) {
                     if (elem.type == token_type_t::literal) {
-                        auto literal_bits_restriction = 1 << instr_type_info_map.find(instr_type)->second.literal_bits;
-                        if ((it->num >= 0 && it->num >= literal_bits_restriction) ||
-                            it->num < 0 && std::abs(it->num) > literal_bits_restriction) {
+                        auto literal_bits_restriction = 1 << instr_type_info_pair->second.literal_bits;
+                        if ((tokens_it->num >= 0 && tokens_it->num >= literal_bits_restriction) ||
+                            (tokens_it->num < 0 && std::abs(tokens_it->num) > literal_bits_restriction)) {
                                 vasm_flags.last_error_extra_msg = "Literal limit exceeded: " + elem.num;
                         }
                     }
                 }
-                try {
-                    output.write_line(decode_instr(instr_tokens, instr_type, instr_type_info_map.find(instr_type)->second.instr_size));
-                }
-                catch (...) {
+            } break;
+            default:
+                tokens_it++;
+        }
+    }
+    
+    size_t instr_common_size = 0;
+    for (int i = 0; i < decode_info.size(); ++i) {
+        auto &cur_decode_info = decode_info[i];
+        if (cur_decode_info.token_types.back() == token_type_t::literal) {
+            auto &last_token = cur_decode_info.tokens.back();
+            if ((last_token.str.substr(0, 3)) == "cia") {
+                int instr_count = last_token.num + i;
+                if (instr_count >= decode_info.size() || instr_count < 0) {
+                    vasm_flags.last_error_extra_msg = "Cia out of range";
                     throw assemble_error_t::decoder;
                 }
 
-                } break;
-            default:
-                it++;
+                int new_literal = instr_common_size;
+                size_t j = i;
+                if (last_token.num >= 0) {
+                    while (j < instr_count) {
+                        new_literal += decode_info[j].instr_size;
+                        j++;
+                    }
+                } else {
+                    while (j > instr_count) {
+                        new_literal -= decode_info[j].instr_size;
+                        j--;
+                    }
+                }
+
+                last_token.num = new_literal;
+                print_info(cur_decode_info.instr_str + ": cia converted to " + std::to_string(new_literal), 3);
+            }
         }
+        decoded_instr.emplace_back(decode_instr(cur_decode_info.tokens, cur_decode_info.instr_type, cur_decode_info.instr_size));
+        instr_common_size += cur_decode_info.instr_size;
     }
     print_info("Decode completed.", 2);
+    return std::move(decoded_instr);
 }
