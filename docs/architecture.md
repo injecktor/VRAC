@@ -28,8 +28,6 @@ Little endian.
 |jl|jump if less|SL-type|11011|||
 |jle|jump if less or equal|SR-type|11100|||
 |jle|jump if less or equal|SL-type|11101|||
-|push|store word in stack|SR-type|11110|||
-|pop|load word from stack|SR-type|11111|||
 |sw|store word|DR-type|00001|||
 |shw|store half word|DR-type|00010|||
 |sb|store byte|DR-type|00011|||
@@ -42,6 +40,9 @@ Little endian.
 |cphw|copy half word|RL-type|01010||Copies 16 LSB|
 |cpb|copy byte|DR-type|01011||Copies 8 LSB|
 |cpb|copy byte|RL-type|01100||Copies 8 LSB|
+|push|store word in stack|SR-type|01110|||
+|push|store word in stack|SL-type|01111|||
+|pop|load word from stack|SR-type|11110|||
 |add|add|ADR-type|00000|000000||
 |add|add|ARL-type|00000|000001||
 |min|minus|ADR-type|00000|000110||
