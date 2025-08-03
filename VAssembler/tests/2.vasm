@@ -1,3 +1,5 @@
+import 3.vasm
+
 j main
 export func test:
     add r4 0x99
@@ -22,3 +24,6 @@ func main:
     push cia+2
     j test
     add r5 0x1
+    push cia+2
+    j 3.check_export
+    add r6 0x222

@@ -14,11 +14,14 @@
 enum class token_type_t {
     none,
     label,
+    label_def,
+    func,
     command,
     reg,
     literal,
-    exp,
-    func,
+    export_def,
+    import,
+    import_label,
     cia
 };
 
@@ -26,6 +29,7 @@ struct token_t {
     token_type_t type;
     std::string str;
     int num;
+    size_t line_number;
 };
 
 struct instr_type_by_tokens_t {

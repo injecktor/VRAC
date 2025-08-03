@@ -42,7 +42,7 @@ bool vasm_file_t::reopen() {
 }
 
 bool vasm_file_t::read_line(std::string& str) {
-    if (input.is_open() && std::getline(input, str)) {
+    if (input.is_open() && std::getline(input, str, '\n')) {
         return true;
     }
     return false;

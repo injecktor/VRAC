@@ -92,8 +92,9 @@ void init_instr() {
     instr_map_insert("jl", instruction_type_t::sl, 0b11011, 0);
     instr_map_insert("jle", instruction_type_t::sr, 0b11100, 0);
     instr_map_insert("jle", instruction_type_t::sl, 0b11101, 0);
-    instr_map_insert("push", instruction_type_t::sr, 0b11110, 0);
-    instr_map_insert("pop", instruction_type_t::sr, 0b11111, 0);
+    instr_map_insert("push", instruction_type_t::sr, 0b01110, 0);
+    instr_map_insert("push", instruction_type_t::sl, 0b01111, 0);
+    instr_map_insert("pop", instruction_type_t::sr, 0b11110, 0);
 
     instr_map_insert("sw", instruction_type_t::dr, 0b00001, 0);
     instr_map_insert("shw", instruction_type_t::dr, 0b00010, 0);

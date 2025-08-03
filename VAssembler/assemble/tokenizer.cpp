@@ -19,6 +19,7 @@ void tokenizer_init() {
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("jle", std::vector{token_type_t::reg}), instruction_type_t::sr));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("jle", std::vector{token_type_t::literal}), instruction_type_t::sl));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("push", std::vector{token_type_t::reg}), instruction_type_t::sr));
+    instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("push", std::vector{token_type_t::literal}), instruction_type_t::sl));
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("pop", std::vector{token_type_t::reg}), instruction_type_t::sr));
 
     instr_type_map.insert(std::make_pair(instr_type_by_tokens_t("sw", std::vector{token_type_t::reg, token_type_t::reg}), instruction_type_t::dr));
@@ -69,6 +70,7 @@ static token_t get_token(const std::string& str) {
     token_t token;
     int tmp = 0;
     token.type = token_type_t::none;
+    token.str = str;
     if (cmd_set.find(str) != cmd_set.end()) {
         token.type = token_type_t::command;
     } else if ((map_iterator = reg_map.find(str)) != reg_map.end()) {
@@ -85,22 +87,37 @@ static token_t get_token(const std::string& str) {
                 token.type = token_type_t::none;
             }
             token.num = tmp;
+        } else {
+            token.num = 0;
         }
+    } else if (str.length() > 4 && str.substr(str.length() - 5) == ".vasm") {
+        token.type = token_type_t::import_label;
+    } else if (str == "import") {
+        token.type = token_type_t::import;
     } else if (str == "export") {
-        token.type = token_type_t::exp;
+        token.type = token_type_t::export_def;
     } else if (str == "func") {
         token.type = token_type_t::func;
     } else {
         token.type = token_type_t::literal;
         try {
             tmp = stoi(str, nullptr, 0);
+            token.num = tmp;
         }
         catch(...) {
-            token.type = token_type_t::none;
+            if (str[str.length() - 1] == ':') {
+                if (str.length() < 2) {
+                    token.type = token_type_t::none;
+                    return token;
+                }
+                token.type = token_type_t::label_def;
+                token.str = str.substr(0, str.length() - 1);
+            } else {
+                token.type = token_type_t::label;
+                token.num = -1;
+            }
         }
-        token.num = tmp;
     }
-    token.str = str;
     return token;
 }
 
@@ -108,6 +125,7 @@ std::list<token_t> tokenize(vasm_file_t& file) {
     std::list<token_t> tokens;
     token_t token_tmp;
     std::string line, token_str;
+    size_t line_number = 0;
     char chr;
     while (file.read_line(line)) {
         size_t offset = 0, offset_tmp;
@@ -123,10 +141,12 @@ std::list<token_t> tokenize(vasm_file_t& file) {
                     vasm_flags.last_error_extra_msg = token_str;
                     throw assemble_error_t::tokenizer;
                 }
+                token_tmp.line_number = line_number;
                 tokens.emplace_back(std::move(token_tmp));
             }
             offset = offset_tmp + 1;
         }
+        line_number++;
     }
     print_info("Tokenizer completed.", 2);
     return tokens;
