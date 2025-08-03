@@ -22,7 +22,10 @@ enum class token_type_t {
     export_def,
     import,
     import_label,
-    cia
+    cia,
+    call,
+    ret,
+    comment
 };
 
 struct token_t {

@@ -76,6 +76,8 @@ static token_t get_token(const std::string& str) {
     } else if ((map_iterator = reg_map.find(str)) != reg_map.end()) {
         token.type = token_type_t::reg;
         token.num = map_iterator->second;
+    } else if (str[0] == ';') {
+        token.type = token_type_t::comment;
     } else if (str.substr(0, 3) == "cia") {
         token.type = token_type_t::cia;
         if (str.length() > 3) {
@@ -101,7 +103,11 @@ static token_t get_token(const std::string& str) {
     } else {
         token.type = token_type_t::literal;
         try {
-            tmp = stoi(str, nullptr, 0);
+            size_t index;
+            tmp = stoi(str, &index, 0);
+            if (index != str.length()) {
+                throw 0;
+            }
             token.num = tmp;
         }
         catch(...) {
@@ -140,6 +146,8 @@ std::list<token_t> tokenize(vasm_file_t& file) {
                 if (token_tmp.type == token_type_t::none) {
                     vasm_flags.last_error_extra_msg = token_str;
                     throw assemble_error_t::tokenizer;
+                } else if (token_tmp.type == token_type_t::comment) {
+                    break;
                 }
                 token_tmp.line_number = line_number;
                 tokens.emplace_back(std::move(token_tmp));
