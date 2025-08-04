@@ -20,7 +20,7 @@ std::string get_full_instr_str(std::vector<token_t> instr_tokens) {
     return str;
 }
 
-static std::string decode_instr(std::vector<token_t> instr_tokens, const instruction_type_t& type, size_t instr_size) {
+static std::string decode_instr(std::vector<token_t> instr_tokens, const instruction_type_t& type, size_t instr_size, bool need_addr) {
     std::stringstream stream;
     size_t instr = 0;
     auto instr_code_pair = instr_map.find(instruction_t(instr_tokens[0].str, type));
@@ -58,57 +58,51 @@ static std::string decode_instr(std::vector<token_t> instr_tokens, const instruc
     }
     stream << std::setfill('0') << std::hex << std::setw(2) << ((instr & 0xff000000) >> 24) << ' ' 
         << std::setw(2) << ((instr & 0xff0000) >> 16);
-    if (instr_tokens.back().type == token_type_t::label && instr_tokens.back().num == -1) {
-        stream << " &" << instr_tokens.back().str;
+    if (need_addr) {
+        auto& last_token = instr_tokens.back();
+        if (last_token.type == token_type_t::cia) {
+            stream << " &" << last_token.num;
+        } else {
+            stream << " &" << last_token.str;
+        }
     } else if (instr_size > 2) {
-        stream << std::setfill('0') << std::hex << ' ' << std::setw(2) << ((instr & 0xff00) >> 8);
+        stream << ' ' << std::setw(2) << ((instr & 0xff00) >> 8);
         if (instr_size == 4) {
-            stream << std::setfill('0') << std::hex << ' ' << std::setw(2) << (instr & 0xff);
+            stream << ' ' << std::setw(2) << (instr & 0xff);
         }
     }
     return stream.str();
 }
 
 decode_tuple_t decode(std::list<token_t>& tokens) {
-    std::list<token_type_t> prev_token_types;
     std::list<std::string> decoded_instr;
     std::vector<decode_info_t> decode_info;
-    std::unordered_map<std::string, size_t> local_labels;
-    export_label_t export_labels;
-    export_label_t::iterator last_export_label;
-    import_request_t import_labels;
-    std::queue<token_type_t> wanted_tokens;
+    std::vector<std::unordered_map<std::string, size_t>> labels;
+    local_function_t local_funcs;
+    export_function_t export_funcs;
+    vasm_function_t::iterator last_func;
+    import_request_t import_funcs;
     size_t instr_common_size = 0;
-    bool label_need_size = false;
+    size_t function_count = 0;
     
     auto tokens_it = tokens.begin();
     while (tokens_it != tokens.end()) {
-        bool found_wanted_token = true;
-        while (!wanted_tokens.empty()) {
-            found_wanted_token = false;
-            if (tokens_it->type == wanted_tokens.back()) {
-                while (!wanted_tokens.empty()) {
-                    wanted_tokens.pop();
-                }
-                found_wanted_token = true;
-                break;
-            }
-            wanted_tokens.pop();
-        }
-        if (!found_wanted_token) {
-            vasm_flags.last_error_extra_msg = "Couldn't find wanted token.";
-            throw assemble_error_t::decoder;
-        }
         switch(tokens_it->type) {
             case token_type_t::command: {
                 decode_info.push_back({});
                 auto &current_decode_info = decode_info.back();
+                if (!function_count) {
+                    THROW_ERROR(tokens_it->line_number, "Instructions outside function are forbidden.");
+                }
+                current_decode_info.func_num = function_count - 1;
+                current_decode_info.need_addr = false;
                 current_decode_info.tokens.emplace_back(*tokens_it);
                 tokens_it++;
                 while (tokens_it != tokens.end() && (tokens_it->type == token_type_t::reg || tokens_it->type == token_type_t::literal 
                         || tokens_it->type == token_type_t::cia || tokens_it->type == token_type_t::label)) {
                     current_decode_info.tokens.emplace_back(*tokens_it);
                     if (tokens_it->type == token_type_t::cia || tokens_it->type == token_type_t::label) {
+                        current_decode_info.need_addr = true;
                         current_decode_info.token_types.emplace_back(token_type_t::literal);
                     } else {
                         current_decode_info.token_types.emplace_back(tokens_it->type);
@@ -139,58 +133,98 @@ decode_tuple_t decode(std::list<token_t>& tokens) {
                 instr_common_size += current_decode_info.instr_size;
             } break;
             case token_type_t::label_def: {
-                tokens_it->num = instr_common_size;
-                if (prev_token_types.size() == 2 && prev_token_types.front() == token_type_t::export_def 
-                    && prev_token_types.back() == token_type_t::func) {
-                    auto res = export_labels.insert(std::make_pair(tokens_it->str, std::make_pair(instr_common_size, 0)));
-                    if (!res.second) {
-                        vasm_flags.last_error_extra_msg = "Non unique label: " + tokens_it->str;
-                        throw assemble_error_t::decoder;
-                    }
-                    last_export_label = res.first;
-                    label_need_size = true;
-                } else {
-                    auto res = local_labels.insert(std::make_pair(tokens_it->str, instr_common_size));
-                    if (!res.second) {
-                        vasm_flags.last_error_extra_msg = "Non unique label: " + tokens_it->str;
-                        throw assemble_error_t::decoder;
-                    }
+                if (!function_count) {
+                    THROW_ERROR(tokens_it->line_number, "Instructions outside function are forbidden.");
                 }
-                prev_token_types.clear();
+                auto res = labels.back().insert(std::make_pair(tokens_it->str, instr_common_size));
+                if (!res.second) {
+                    vasm_flags.last_error_extra_msg = "Non unique label: " + tokens_it->str;
+                    throw assemble_error_t::decoder;
+                }
+
                 tokens_it++;
             } break;
             case token_type_t::import: {
-                wanted_tokens.emplace(token_type_t::import_label);
+                if (!function_count) {
+                    THROW_ERROR(tokens_it->line_number, "Instructions outside function are forbidden.");
+                }
+                tokens_it++;
+                if (tokens_it == tokens.end() || tokens_it->type != token_type_t::label) {
+                    THROW_ERROR(tokens_it->line_number, "Expected import label.");
+                }
+                
                 tokens_it++;
             } break;
-            case token_type_t::import_label: {
+            case token_type_t::call: {
+                if (!function_count) {
+                    THROW_ERROR(tokens_it->line_number, "Instructions outside function are forbidden.");
+                }
+                tokens_it++;
+                if (tokens_it == tokens.end() || tokens_it->type != token_type_t::label) {
+                    THROW_ERROR(tokens_it->line_number, "Expected label.");
+                }
+
+                auto next_tiken = tokens_it;
+                next_tiken++;
+                tokens.insert(next_tiken, token_t(token_type_t::command, "push", 0, tokens_it->line_number, "call " + tokens_it->str));
+                tokens.insert(next_tiken, token_t(token_type_t::cia, "cia+2", 2, tokens_it->line_number, "call " + tokens_it->str));
+                tokens.insert(next_tiken, token_t(token_type_t::command, "j", 0, tokens_it->line_number, "call " + tokens_it->str));
+                tokens.insert(next_tiken, token_t(token_type_t::label, tokens_it->str, 0, tokens_it->line_number, "call " + tokens_it->str));
+
                 tokens_it++;
             } break;
             case token_type_t::export_def: {
-                wanted_tokens.emplace(token_type_t::func);
-                prev_token_types.emplace_back(token_type_t::export_def);
+                if (function_count) {
+                    last_func->second.second = instr_common_size - last_func->second.first;
+                }
+
+                tokens_it++;
+                if (tokens_it == tokens.end() || tokens_it->type != token_type_t::func) {
+                    THROW_ERROR(tokens_it->line_number, "Expected func.");
+                }
+                tokens_it++;
+                if (tokens_it == tokens.end() || tokens_it->type != token_type_t::label_def) {
+                    THROW_ERROR(tokens_it->line_number, "Expected func.");
+                }
+
+                auto res = export_funcs.insert(std::make_pair(tokens_it->str, std::make_pair(instr_common_size, 0)));
+                if (!res.second) {
+                    vasm_flags.last_error_extra_msg = "Non unique label: " + tokens_it->str;
+                    throw assemble_error_t::decoder;
+                }
+                last_func = res.first;
+
+                labels.push_back({});
+                function_count++;
                 tokens_it++;
             } break;
             case token_type_t::func: {
-                if (label_need_size) {
-                    last_export_label->second.second = instr_common_size - last_export_label->second.first;
-                    label_need_size = false;
+                if (function_count) {
+                    last_func->second.second = instr_common_size - last_func->second.first;
                 }
-                wanted_tokens.emplace(token_type_t::label_def);
-                prev_token_types.emplace_back(token_type_t::func);
+
+                tokens_it++;
+                if (tokens_it == tokens.end() || tokens_it->type != token_type_t::label_def) {
+                    THROW_ERROR(tokens_it->line_number, "Expected func.");
+                }
+
+                auto res = local_funcs.insert(std::make_pair(tokens_it->str, std::make_pair(instr_common_size, 0)));
+                if (!res.second) {
+                    vasm_flags.last_error_extra_msg = "Non unique label: " + tokens_it->str;
+                    throw assemble_error_t::decoder;
+                }
+                last_func = res.first;
+
+                labels.push_back({});
+                function_count++;
                 tokens_it++;
             } break;
             default: {
-                vasm_flags.last_error_extra_msg = tokens_it->str;
-                throw assemble_error_t::decoder;
                 THROW_ERROR(tokens_it->line_number, tokens_it->str);
             }
         }
     }
-    if (!wanted_tokens.empty()) {
-        vasm_flags.last_error_extra_msg = "Expected more tokens.";
-        throw assemble_error_t::decoder;
-    }
+    last_func->second.second = instr_common_size - last_func->second.first;
     
     instr_common_size = 0;
     for (int i = 0; i < decode_info.size(); ++i) {
@@ -222,14 +256,15 @@ decode_tuple_t decode(std::list<token_t>& tokens) {
                     print_info(cur_decode_info.instr_str + ": " + last_token.str + " converted to " + std::to_string(new_literal), 3);
                 } break;
                 case token_type_t::label: {
-                    auto local_labels_pair = local_labels.find(last_token.str);
-                    auto export_labels_pair = export_labels.find(last_token.str);
-                    if (local_labels_pair != local_labels.end()) {
-                        last_token.num = local_labels_pair->second;
-                    } else if (export_labels_pair != export_labels.end()) {
-                        last_token.num = export_labels_pair->second.first;
+                    auto local_labels_pair = labels[cur_decode_info.func_num].find(last_token.str);
+                    auto local_funcs_pair = local_funcs.find(last_token.str);
+                    auto export_funcs_pair = export_funcs.find(last_token.str);
+                    if (local_funcs_pair != local_funcs.end()) {
+                        last_token.num = local_funcs_pair->second.first;
+                    } else if (export_funcs_pair != export_funcs.end()) {
+                        last_token.num = export_funcs_pair->second.first;
                     } else if (last_token.str.find('.') != std::string::npos) {
-                        import_labels.insert(last_token.str);
+                        import_funcs.insert(last_token.str);
                     } else {
                         THROW_ERROR(cur_decode_info.tokens.cbegin()->line_number, "Unknown label: " + last_token.str);
                     }
@@ -237,7 +272,7 @@ decode_tuple_t decode(std::list<token_t>& tokens) {
             }
         }
         try {
-            decoded_instr.emplace_back(decode_instr(cur_decode_info.tokens, cur_decode_info.instr_type, cur_decode_info.instr_size));
+            decoded_instr.emplace_back(decode_instr(cur_decode_info.tokens, cur_decode_info.instr_type, cur_decode_info.instr_size, cur_decode_info.need_addr));
         }
         catch (...) {
             vasm_flags.last_error_extra_msg = std::to_string(cur_decode_info.tokens.cbegin()->line_number) + vasm_flags.last_error_extra_msg;
@@ -246,5 +281,5 @@ decode_tuple_t decode(std::list<token_t>& tokens) {
         instr_common_size += cur_decode_info.instr_size;
     }
     print_info("Decode completed.", 2);
-    return std::make_tuple(decoded_instr, import_labels, export_labels);
+    return std::make_tuple(decoded_instr, import_funcs, local_funcs, export_funcs, instr_common_size);
 }

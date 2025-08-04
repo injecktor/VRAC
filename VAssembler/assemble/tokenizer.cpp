@@ -1,5 +1,10 @@
 #include "tokenizer.hpp"
 
+#define RETURN_TOKEN(_token_) do { \
+    last_token_type = (_token_).type; \
+    return token; \
+} while (false);
+
 std::unordered_map<instr_type_by_tokens_t, instruction_type_t> instr_type_map;
 
 void tokenizer_init() {
@@ -65,13 +70,15 @@ void tokenizer_init() {
 }
 
 static token_t get_token(const std::string& str) {
+    static token_type_t last_token_type = token_type_t::none;
     std::unordered_map<std::string, int>::iterator map_iterator;
     std::string str_tmp;
     token_t token;
     int tmp = 0;
-    token.type = token_type_t::none;
     token.str = str;
-    if (cmd_set.find(str) != cmd_set.end()) {
+    if (last_token_type == token_type_t::import) {
+        token.type = token_type_t::label;
+    } else if (cmd_set.find(str) != cmd_set.end()) {
         token.type = token_type_t::command;
     } else if ((map_iterator = reg_map.find(str)) != reg_map.end()) {
         token.type = token_type_t::reg;
@@ -92,14 +99,14 @@ static token_t get_token(const std::string& str) {
         } else {
             token.num = 0;
         }
-    } else if (str.length() > 4 && str.substr(str.length() - 5) == ".vasm") {
-        token.type = token_type_t::import_label;
     } else if (str == "import") {
         token.type = token_type_t::import;
     } else if (str == "export") {
         token.type = token_type_t::export_def;
     } else if (str == "func") {
         token.type = token_type_t::func;
+    } else if (str == "call") {
+        token.type = token_type_t::call;
     } else {
         token.type = token_type_t::literal;
         try {
@@ -114,7 +121,7 @@ static token_t get_token(const std::string& str) {
             if (str[str.length() - 1] == ':') {
                 if (str.length() < 2) {
                     token.type = token_type_t::none;
-                    return token;
+                    RETURN_TOKEN(token);
                 }
                 token.type = token_type_t::label_def;
                 token.str = str.substr(0, str.length() - 1);
@@ -124,7 +131,7 @@ static token_t get_token(const std::string& str) {
             }
         }
     }
-    return token;
+    RETURN_TOKEN(token);
 }
 
 std::list<token_t> tokenize(vasm_file_t& file) {

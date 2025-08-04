@@ -21,7 +21,6 @@ enum class token_type_t {
     literal,
     export_def,
     import,
-    import_label,
     cia,
     call,
     ret,
@@ -33,6 +32,10 @@ struct token_t {
     std::string str;
     int num;
     size_t line_number;
+    std::string comment;
+    token_t() = default;
+    token_t(token_type_t type, std::string str, int num, size_t line_number, std::string comment = "")
+    : type(type), str(str), num(num), line_number(line_number), comment(comment) {}
 };
 
 struct instr_type_by_tokens_t {

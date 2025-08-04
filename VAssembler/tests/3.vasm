@@ -1,4 +1,5 @@
-check_export:
-    add r10 0x100
-    pop r14
-    j r14
+func check_export:
+    call check_export
+    call check_export
+    call check_export
+    j check_export

@@ -1,10 +1,11 @@
-import 3.vasm
-
-j main
 export func test:
-    add r4 0x99
+    add r4 0xaa
     add r4 0x1
     cpw r5 r4
+    pop r14
+    j r14
+func test1:
+    add r7 0x0b
     pop r14
     j r14
 func main:
@@ -22,8 +23,9 @@ func main:
 
     add r3 0x15
     push cia+2
-    j test
+    j test ;call test
     add r5 0x1
+    call test1
     push cia+2
     j 3.check_export
     add r6 0x222
