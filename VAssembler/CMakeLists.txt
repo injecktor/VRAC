@@ -19,6 +19,8 @@ add_executable(vasm
         assemble/object_file.cpp
         assemble/tokenizer.cpp
         assemble/instructions.cpp
+
+        link/linker.cpp
 )
 
 target_include_directories(vasm PRIVATE 

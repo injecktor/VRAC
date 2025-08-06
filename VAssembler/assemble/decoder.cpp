@@ -20,7 +20,7 @@ std::string get_full_instr_str(std::vector<token_t> instr_tokens) {
     return str;
 }
 
-static std::string decode_instr(std::vector<token_t> instr_tokens, const instruction_type_t& type, size_t instr_size, bool need_addr) {
+static std::string decode_instr(std::vector<token_t> instr_tokens, const instruction_type_t& type, size_t instr_size, bool need_addr, bool call) {
     std::stringstream stream;
     size_t instr = 0;
     auto instr_code_pair = instr_map.find(instruction_t(instr_tokens[0].str, type));
@@ -60,10 +60,9 @@ static std::string decode_instr(std::vector<token_t> instr_tokens, const instruc
         << std::setw(2) << ((instr & 0xff0000) >> 16);
     if (need_addr) {
         auto& last_token = instr_tokens.back();
-        if (last_token.type == token_type_t::cia) {
-            stream << " &" << last_token.num;
-        } else {
-            stream << " &" << last_token.str;
+        stream << " &" << last_token.num;
+        if (call) {
+            stream << " #" << last_token.str;
         }
     } else if (instr_size > 2) {
         stream << ' ' << std::setw(2) << ((instr & 0xff00) >> 8);
@@ -96,12 +95,14 @@ decode_tuple_t decode(std::list<token_t>& tokens) {
                 }
                 current_decode_info.func_num = function_count - 1;
                 current_decode_info.need_addr = false;
+                current_decode_info.call = false;
                 current_decode_info.tokens.emplace_back(*tokens_it);
                 tokens_it++;
                 while (tokens_it != tokens.end() && (tokens_it->type == token_type_t::reg || tokens_it->type == token_type_t::literal 
                         || tokens_it->type == token_type_t::cia || tokens_it->type == token_type_t::label)) {
                     current_decode_info.tokens.emplace_back(*tokens_it);
                     if (tokens_it->type == token_type_t::cia || tokens_it->type == token_type_t::label) {
+                        current_decode_info.call = tokens_it->call;
                         current_decode_info.need_addr = true;
                         current_decode_info.token_types.emplace_back(token_type_t::literal);
                     } else {
@@ -166,10 +167,10 @@ decode_tuple_t decode(std::list<token_t>& tokens) {
 
                 auto next_tiken = tokens_it;
                 next_tiken++;
-                tokens.insert(next_tiken, token_t(token_type_t::command, "push", 0, tokens_it->line_number, "call " + tokens_it->str));
-                tokens.insert(next_tiken, token_t(token_type_t::cia, "cia+2", 2, tokens_it->line_number, "call " + tokens_it->str));
-                tokens.insert(next_tiken, token_t(token_type_t::command, "j", 0, tokens_it->line_number, "call " + tokens_it->str));
-                tokens.insert(next_tiken, token_t(token_type_t::label, tokens_it->str, 0, tokens_it->line_number, "call " + tokens_it->str));
+                tokens.insert(next_tiken, token_t(token_type_t::command, "push", 0, tokens_it->line_number));
+                tokens.insert(next_tiken, token_t(token_type_t::cia, "cia+2", 2, tokens_it->line_number));
+                tokens.insert(next_tiken, token_t(token_type_t::command, "j", 0, tokens_it->line_number));
+                tokens.insert(next_tiken, token_t(token_type_t::label, tokens_it->str, 0, tokens_it->line_number, true));
 
                 tokens_it++;
             } break;
@@ -264,6 +265,9 @@ decode_tuple_t decode(std::list<token_t>& tokens) {
                     } else if (export_funcs_pair != export_funcs.end()) {
                         last_token.num = export_funcs_pair->second.first;
                     } else if (last_token.str.find('.') != std::string::npos) {
+                        if (!last_token.call) {
+                            THROW_ERROR(cur_decode_info.tokens.cbegin()->line_number, "Can't jump to import function: " + last_token.str);
+                        }
                         import_funcs.insert(last_token.str);
                     } else {
                         THROW_ERROR(cur_decode_info.tokens.cbegin()->line_number, "Unknown label: " + last_token.str);
@@ -272,7 +276,8 @@ decode_tuple_t decode(std::list<token_t>& tokens) {
             }
         }
         try {
-            decoded_instr.emplace_back(decode_instr(cur_decode_info.tokens, cur_decode_info.instr_type, cur_decode_info.instr_size, cur_decode_info.need_addr));
+            decoded_instr.emplace_back(decode_instr(cur_decode_info.tokens, cur_decode_info.instr_type, 
+                cur_decode_info.instr_size, cur_decode_info.need_addr, cur_decode_info.call));
         }
         catch (...) {
             vasm_flags.last_error_extra_msg = std::to_string(cur_decode_info.tokens.cbegin()->line_number) + vasm_flags.last_error_extra_msg;

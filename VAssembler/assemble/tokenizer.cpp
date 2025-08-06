@@ -138,7 +138,7 @@ std::list<token_t> tokenize(vasm_file_t& file) {
     std::list<token_t> tokens;
     token_t token_tmp;
     std::string line, token_str;
-    size_t line_number = 0;
+    size_t line_number = 1;
     char chr;
     while (file.read_line(line)) {
         size_t offset = 0, offset_tmp;

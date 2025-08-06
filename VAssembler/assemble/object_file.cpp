@@ -50,10 +50,10 @@ void write_instr(vasm_file_t &output_file, const std::list<std::string>& decoded
     }
 }
 
-void create_object_file(vasm_file_t& output_file, const decode_tuple_t& decode_info) {
-    vasm_file_t::delete_file(vasm_flags.output_path);
-    if (!output_file.open(vasm_flags.output_path)) {
-        vasm_flags.last_error_extra_msg = vasm_flags.output_path;
+void create_object_file(vasm_file_t& output_file, std::string path, const decode_tuple_t& decode_info) {
+    vasm_file_t::delete_file(path);
+    if (!output_file.open(path)) {
+        vasm_flags.last_error_extra_msg = path;
         throw vasm_error_t::cant_open_file;
     }
     output_file.write_line(VASM_HEX_FORMAT_STR);

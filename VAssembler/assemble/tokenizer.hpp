@@ -32,10 +32,10 @@ struct token_t {
     std::string str;
     int num;
     size_t line_number;
-    std::string comment;
+    bool call;
     token_t() = default;
-    token_t(token_type_t type, std::string str, int num, size_t line_number, std::string comment = "")
-    : type(type), str(str), num(num), line_number(line_number), comment(comment) {}
+    token_t(token_type_t type, std::string str, int num, size_t line_number, bool call = false)
+    : type(type), str(str), num(num), line_number(line_number), call(call) {}
 };
 
 struct instr_type_by_tokens_t {

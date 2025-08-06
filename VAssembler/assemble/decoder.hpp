@@ -12,6 +12,7 @@ struct decode_info_t {
     size_t instr_size;
     size_t func_num;
     bool need_addr;
+    bool call;
 };
 
 using import_request_t = std::unordered_set<std::string>;

@@ -5,8 +5,8 @@ int main(int argc, char *argv[]) {
     try {
         parse_args(argc, argv);
         vasm_pre_assemble();
-        vasm_assemble();
-        // vasm_link();
+        std::queue<std::string> files = std::move(vasm_assemble());
+        vasm_link(files);
         // vasm_load();
         print_info("Success", 2);
     }
