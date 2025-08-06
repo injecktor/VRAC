@@ -88,7 +88,7 @@ void parse_args(int argc, char *argv[]) {
     }
 
     if (vasm_flags.output_path.empty()) {
-        vasm_flags.output_path = vasm_flags.input_files_path.front() + DEFAULT_VASM_OBJ_EXTENSION;
+        vasm_flags.output_path = vasm_flags.input_files_path.front() + DEFAULT_VASM_EXEC_EXTENSION;
     }
 
     if (vasm_flags.info_level < 0) {

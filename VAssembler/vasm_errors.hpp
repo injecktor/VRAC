@@ -25,7 +25,8 @@ enum class assemble_error_t {
 };
 
 enum class link_error_t {
-
+    unknown,
+    section
 };
 
 enum class load_error_t {

@@ -8,4 +8,4 @@
 #include "file_handle.hpp"
 #include "object_file.hpp"
 
-extern std::queue<std::string> vasm_assemble();
+extern std::vector<std::string> vasm_assemble();

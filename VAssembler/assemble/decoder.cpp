@@ -81,7 +81,7 @@ decode_tuple_t decode(std::list<token_t>& tokens) {
     export_function_t export_funcs;
     vasm_function_t::iterator last_func;
     import_request_t import_funcs;
-    size_t instr_common_size = 0;
+    size_t instr_total_size = 0;
     size_t function_count = 0;
     
     auto tokens_it = tokens.begin();
@@ -131,13 +131,13 @@ decode_tuple_t decode(std::list<token_t>& tokens) {
                         }
                     }
                 }
-                instr_common_size += current_decode_info.instr_size;
+                instr_total_size += current_decode_info.instr_size;
             } break;
             case token_type_t::label_def: {
                 if (!function_count) {
                     THROW_ERROR(tokens_it->line_number, "Instructions outside function are forbidden.");
                 }
-                auto res = labels.back().insert(std::make_pair(tokens_it->str, instr_common_size));
+                auto res = labels.back().insert(std::make_pair(tokens_it->str, instr_total_size));
                 if (!res.second) {
                     vasm_flags.last_error_extra_msg = "Non unique label: " + tokens_it->str;
                     throw assemble_error_t::decoder;
@@ -176,7 +176,7 @@ decode_tuple_t decode(std::list<token_t>& tokens) {
             } break;
             case token_type_t::export_def: {
                 if (function_count) {
-                    last_func->second.second = instr_common_size - last_func->second.first;
+                    last_func->second.second = instr_total_size - last_func->second.first;
                 }
 
                 tokens_it++;
@@ -188,7 +188,7 @@ decode_tuple_t decode(std::list<token_t>& tokens) {
                     THROW_ERROR(tokens_it->line_number, "Expected func.");
                 }
 
-                auto res = export_funcs.insert(std::make_pair(tokens_it->str, std::make_pair(instr_common_size, 0)));
+                auto res = export_funcs.insert(std::make_pair(tokens_it->str, std::make_pair(instr_total_size, 0)));
                 if (!res.second) {
                     vasm_flags.last_error_extra_msg = "Non unique label: " + tokens_it->str;
                     throw assemble_error_t::decoder;
@@ -201,7 +201,7 @@ decode_tuple_t decode(std::list<token_t>& tokens) {
             } break;
             case token_type_t::func: {
                 if (function_count) {
-                    last_func->second.second = instr_common_size - last_func->second.first;
+                    last_func->second.second = instr_total_size - last_func->second.first;
                 }
 
                 tokens_it++;
@@ -209,7 +209,7 @@ decode_tuple_t decode(std::list<token_t>& tokens) {
                     THROW_ERROR(tokens_it->line_number, "Expected func.");
                 }
 
-                auto res = local_funcs.insert(std::make_pair(tokens_it->str, std::make_pair(instr_common_size, 0)));
+                auto res = local_funcs.insert(std::make_pair(tokens_it->str, std::make_pair(instr_total_size, 0)));
                 if (!res.second) {
                     vasm_flags.last_error_extra_msg = "Non unique label: " + tokens_it->str;
                     throw assemble_error_t::decoder;
@@ -225,9 +225,9 @@ decode_tuple_t decode(std::list<token_t>& tokens) {
             }
         }
     }
-    last_func->second.second = instr_common_size - last_func->second.first;
+    last_func->second.second = instr_total_size - last_func->second.first;
     
-    instr_common_size = 0;
+    instr_total_size = 0;
     for (int i = 0; i < decode_info.size(); ++i) {
         auto &cur_decode_info = decode_info[i];
         auto &last_token = cur_decode_info.tokens.back();
@@ -239,7 +239,7 @@ decode_tuple_t decode(std::list<token_t>& tokens) {
                         THROW_ERROR(cur_decode_info.tokens.cbegin()->line_number, "Cia out of range");
                     }
 
-                    int new_literal = instr_common_size;
+                    int new_literal = instr_total_size;
                     size_t j = i;
                     if (last_token.num >= 0) {
                         while (j < instr_count) {
@@ -283,8 +283,8 @@ decode_tuple_t decode(std::list<token_t>& tokens) {
             vasm_flags.last_error_extra_msg = std::to_string(cur_decode_info.tokens.cbegin()->line_number) + vasm_flags.last_error_extra_msg;
             throw assemble_error_t::decoder;
         }
-        instr_common_size += cur_decode_info.instr_size;
+        instr_total_size += cur_decode_info.instr_size;
     }
     print_info("Decode completed.", 2);
-    return std::make_tuple(decoded_instr, import_funcs, local_funcs, export_funcs, instr_common_size);
+    return std::make_tuple(decoded_instr, import_funcs, local_funcs, export_funcs, instr_total_size);
 }

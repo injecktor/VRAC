@@ -72,6 +72,13 @@ bool vasm_file_t::is_open() {
     return input.is_open() || output.is_open();
 }
 
+std::string vasm_file_t::current_file() {
+    if (input.is_open()) {
+        return path;
+    }
+    return "";
+}
+
 bool vasm_file_t::delete_file(std::string path) {
     return !std::filesystem::remove(path);
 }

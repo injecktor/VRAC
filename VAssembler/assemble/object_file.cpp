@@ -7,7 +7,7 @@ void create_imports_request(vasm_file_t& output_file, const import_request_t& im
         
     output_file.write_line("Import functions");
     for (auto&& label : import_functions) {
-        output_file.write_line(label);
+        output_file.write_line(label + " 0 0");
     }
     output_file.write_line("END");
     print_info("Create imports request completed.", 2);

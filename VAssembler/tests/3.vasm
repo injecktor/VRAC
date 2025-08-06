@@ -3,3 +3,5 @@ func check_export:
     call check_export
     call check_export
     j check_export
+    call 2.main
+    pop r14

@@ -5,7 +5,7 @@ int main(int argc, char *argv[]) {
     try {
         parse_args(argc, argv);
         vasm_pre_assemble();
-        std::queue<std::string> files = std::move(vasm_assemble());
+        std::vector<std::string> files = std::move(vasm_assemble());
         vasm_link(files);
         // vasm_load();
         print_info("Success", 2);
@@ -57,7 +57,16 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     catch (const link_error_t& error) {
-
+        switch (error) {
+            case link_error_t::unknown:
+                error_str = "Linker error.";
+                break;
+            case link_error_t::section:
+                error_str = "Section error.";
+                break;
+        }
+        print_err(error_str);
+        return 1;
     }
     catch (const load_error_t& error) {
 

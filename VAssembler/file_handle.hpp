@@ -27,6 +27,7 @@ public:
     bool write_line(const std::string& str);
     bool delete_file();
     bool is_open();
+    std::string current_file();
     ~vasm_file_t();
 
     static bool delete_file(std::string path);

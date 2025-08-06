@@ -9,10 +9,10 @@ bool file_need_compile(const vasm_file_t& file) {
     return true;
 }
 
-std::queue<std::string> vasm_assemble() {
+std::vector<std::string> vasm_assemble() {
     vasm_file_t input_file(file_mode_t::read);
     vasm_file_t output_file(file_mode_t::write);
-    std::queue<std::string> compiled_paths;
+    std::vector<std::string> compiled_paths;
     std::string input_path;
     std::string output_path;
     std::list<token_t> tokens;
@@ -51,7 +51,7 @@ std::queue<std::string> vasm_assemble() {
                 throw assemble_error_t::unknown;
             }
         }
-        compiled_paths.push(output_path);
+        compiled_paths.emplace_back(output_path);
         vasm_flags.input_files_path.pop();
     }
     input_file.close();
