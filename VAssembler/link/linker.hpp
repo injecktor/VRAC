@@ -7,5 +7,6 @@
 #include "file_handle.hpp"
 #include "vasm_errors.hpp"
 #include "vasm_flags.hpp"
+#include "funcs_handle.hpp"
 
 extern void vasm_link(std::vector<std::string> objects);

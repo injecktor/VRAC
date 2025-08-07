@@ -27,6 +27,7 @@ target_include_directories(vasm PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
         pre_assemble/
         assemble/
+        link/
 )
 
 set_target_properties(vasm PROPERTIES
