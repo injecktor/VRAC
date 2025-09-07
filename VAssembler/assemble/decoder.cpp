@@ -11,7 +11,7 @@
     throw assemble_error_t::decoder; \
 } while(false);
 
-std::string get_full_instr_str(std::vector<token_t> instr_tokens) {
+static std::string get_full_instr_str(std::vector<token_t> instr_tokens) {
     std::string str;
     for (auto&& elem : instr_tokens) {
         str += elem.str;
@@ -21,6 +21,7 @@ std::string get_full_instr_str(std::vector<token_t> instr_tokens) {
 }
 
 static std::string decode_instr(std::vector<token_t> instr_tokens, const instruction_type_t& type, size_t instr_size, bool need_addr, bool call) {
+    static size_t total_size = 0;
     std::stringstream stream;
     size_t instr = 0;
     auto instr_code_pair = instr_map.find(instruction_t(instr_tokens[0].str, type));
@@ -70,6 +71,8 @@ static std::string decode_instr(std::vector<token_t> instr_tokens, const instruc
             stream << ' ' << std::setw(2) << (instr & 0xff);
         }
     }
+    stream << std::dec << ' ' << total_size;
+    total_size += instr_size;
     return stream.str();
 }
 

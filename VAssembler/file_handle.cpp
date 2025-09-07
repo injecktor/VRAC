@@ -72,6 +72,20 @@ bool vasm_file_t::is_open() {
     return input.is_open() || output.is_open();
 }
 
+bool vasm_file_t::set_line_cursor(size_t line_number) {
+    if (!reopen()) {
+        return false;
+    }
+    if (!line_number) {
+        return true;
+    }
+    std::string tmp;
+    for (size_t i = 0; i < line_number - 1; i++) {
+        read_line(tmp);
+    }
+    return true;
+}
+
 std::string vasm_file_t::current_file() {
     if (input.is_open()) {
         return path;

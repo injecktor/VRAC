@@ -27,6 +27,7 @@ public:
     bool write_line(const std::string& str);
     bool delete_file();
     bool is_open();
+    bool set_line_cursor(size_t line_number);
     std::string current_file();
     ~vasm_file_t();
 

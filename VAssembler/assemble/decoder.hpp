@@ -3,6 +3,7 @@
 #include "tokenizer.hpp"
 #include <queue>
 #include <tuple>
+#include <array>
 
 struct decode_info_t {
     std::vector<token_t> tokens;

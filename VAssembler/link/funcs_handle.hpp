@@ -2,6 +2,7 @@
 #include <string>
 
 #include "vasm_errors.hpp"
+#include "file_handle.hpp"
 
 struct file_t {
     std::string file;
@@ -19,6 +20,7 @@ struct func_t {
 struct func_info_t {
     func_t func;
     std::string file;
+    size_t line_number;
 };
 
 extern std::vector<file_t> files;

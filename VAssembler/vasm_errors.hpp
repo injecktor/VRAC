@@ -27,7 +27,8 @@ enum class assemble_error_t {
 enum class link_error_t {
     unknown,
     section,
-    main_func
+    main_func,
+    func
 };
 
 enum class load_error_t {
