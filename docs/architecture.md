@@ -120,7 +120,9 @@ Flags serve to contain extra information.
 
 ## Registers
 
-VRAC has 16 general purpose registers r0-r15
+VRAC has 16 general purpose registers **r0**-**r15**. But register **r14** 
+and **r15** are used to stack pointer and changing them may cause unexpected
+behaviour.
 
 ## Instruction types
 
